@@ -8,20 +8,10 @@ using Account.Repository.Models;
 
 namespace Account.Repository
 {
-    public class Repository
+    public class Repository : IRepository
     {
         private readonly DbContextOptions<AppDbContext> dbOptions;
-
         public Repository(DbContextOptions<AppDbContext> option) => dbOptions = option;
-
-        public void CreateUser(User user)
-        {
-            using (var db = new AppDbContext(dbOptions))
-            {
-                db.Users.Add(user);
-                db.SaveChanges();
-            }
-        }
 
         public Transaction CreateTransaction(string userFromId, string userToId, decimal amount)
         {
@@ -61,18 +51,6 @@ namespace Account.Repository
                     dbTransaction.Rollback();
                     throw err;
                 }
-            }
-        }
-
-        public User GetUser(string userId)
-        {
-            using (var db = new AppDbContext(dbOptions))
-            {
-                return db.Users.Where(u => u.Id == userId)
-                               .Include(u => u.TransactionsIn)
-                               .Include(u => u.TransactionsOut)
-                               .FirstOrDefault()
-                       ?? throw new Exception("Пользователь не найден.");
             }
         }
     }

@@ -22,6 +22,7 @@ namespace Account.Repository
             builder.Entity<Transaction>().HasOne(tr => tr.UserTo)
                                          .WithMany(u => u.TransactionsIn)
                                          .HasForeignKey(tr => tr.UserToId);
+            base.OnModelCreating(builder);
         }
     }
 }
